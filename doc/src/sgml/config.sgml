@@ -1066,6 +1066,32 @@ include_dir 'conf.d'
       </listitem>
      </varlistentry>
 
+     <varlistentry id="guc-libpq-compression" xreflabel="libpq_compression">
+      <term><varname>libpq_compression</varname> (<type>string</type>)
+      <indexterm>
+       <primary><varname>libpq_compression</varname> configuration parameter</primary>
+      </indexterm>
+      </term>
+      <listitem>
+       <para>
+        This parameter controls the available client-server traffic compression methods.
+        It allows rejecting compression requests even if it is supported by the server (for example, due to security, or CPU consumption).
+        The default is <literal>off</literal>, which means that no compression methods are allowed.
+        The value <literal>on</literal> means all supported compression methods are allowed.
+        For more precise control, a list of the allowed compression methods can be specified.
+        For example, to allow only <literal>lz4</literal> and <literal>gzip</literal>, set the setting to <literal>lz4;gzip</literal>.
+        The server will choose the first algorithm from the list also supported by a given client.
+        <literal>none</literal> is also allowed when specifying a list, and if selected means that the server
+        will send messages uncompressed, but may still receive compressed messages if the list includes them.
+        This is most useful if e.g. you want to enable compression for client-to-server traffic
+        but not client-to-server traffic, using e.g. <literal>none;gzip;lz4</literal> as the
+        parameter. Also, compression level can be specified for each method, e.g. <literal>lz4:1;gzip:2</literal>
+        setting will set the compression level for <literal>lz4</literal> to 1 and <literal>gzip</literal>
+        to 2. The default compression level for each algorithm is chosen by the underlying library.        
+       </para>
+      </listitem>
+     </varlistentry>
+
      </variablelist>
      </sect2>
 

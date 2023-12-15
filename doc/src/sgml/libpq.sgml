@@ -1354,6 +1354,56 @@ postgresql://%2Fvar%2Flib%2Fpostgresql/dbname
       </listitem>
      </varlistentry>
 
+     <varlistentry id="libpq-connect-compression" xreflabel="compression">
+      <term><literal>compression</literal></term>
+      <listitem>
+      <para>
+        Request compression of libpq traffic. The client sends a request with
+        a list of compression algorithms. Compression can be requested by a client
+        by including the <literal>"compression"</literal> option in its connection string.
+        This can either be a boolean value to enable or disable compression
+        (<literal>"true"</literal>/<literal>"false"</literal>,
+        <literal>"on"</literal>/<literal>"off"</literal>,
+        <literal>"yes"</literal>/<literal>"no"</literal>,
+        <literal>"1"</literal>/<literal>"0"</literal>),
+        or an explicit list of comma-separated compression algorithms
+        which can optionally include compression level (<literal>"gzip;lz4:2"</literal>).
+        The default value is <literal>"off"</literal>.
+        If compression is enabled but an algorithm is not explicitly specified,
+        the client library sends its full list of supported algorithms.
+        The server sends its list of supported parameters in the <varname>libpq_compression</varname>
+        parameter.
+        Both the client and server will prefer the first algorithm in their list that is supported by
+        the other side.
+        <literal>"none"</literal> is also allowed in the list, and if selected means that the client
+        (or server) will send messages uncompressed, but depending on the other values it still may
+        receive compressed messages.
+        This is most useful if e.g. you want to enable compression for server-to-client traffic
+        but not client-to-server traffic, using e.g. <literal>"none;gzip;lz4"</literal> as the
+        compression parameter.
+      </para>
+      <para>
+        After receiving a startup packet with <varname>_pq_.libpq_compression</varname> set, the
+        server can send CompressedData messages referencing any of the specified algorithms, for
+        server-to-client traffic compression.
+        After receiving a parameter status message with <varname>libpq_compression</varname> set,
+        the client can send CompressedData messages referencing any of the specified algorithms for
+        client-to-server traffic compression. (Note that if the client has not requested the
+        <varname>_pq_.libpq_compression</varname> protocol extension in the startup packet, the
+        server may reject all CompressedData messages even if <varname>libpq_compression</varname>
+        is non-empty.)
+      </para>
+      <para>
+        Support for compression algorithms must be enabled when the server is compiled.
+        Currently, three algorithms are supported: gzip (default), lz4 (if Postgres was
+        configured with --with-lz4 option), and zstd (if Postgres was configured with
+        --with-zstd option). In all cases, streaming mode is used.
+        Please note that using compression together with SSL may expose extra vulnerabilities:
+        <ulink url="https://en.wikipedia.org/wiki/CRIME">CRIME</ulink>
+      </para>
+      </listitem>
+     </varlistentry>
+
      <varlistentry id="libpq-connect-client-encoding" xreflabel="client_encoding">
       <term><literal>client_encoding</literal></term>
       <listitem>
