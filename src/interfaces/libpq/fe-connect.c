@@ -399,7 +399,7 @@ static const internalPQconninfoOption PQconninfoOptions[] = {
 		"Replication", "D", 5,
 	offsetof(struct pg_conn, replication)},
 
-	{"compression", "PGCOMPRESSION", "off", NULL,
+	{"compression", "PGCOMPRESSION", "on", NULL,
 		"Libpq-compression", "", 16,
 	offsetof(struct pg_conn, compression)},
 
