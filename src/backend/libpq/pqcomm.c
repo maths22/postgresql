@@ -1580,6 +1580,7 @@ internal_flush(void)
 
 		if (rc < 0 || (bytes_sent == 0 && available))
 		{
+			printf("Up here we have rc: %d, errno: %d\n", rc, errno);
 			if (errno == EINTR)
 				continue;		/* Ok if we were interrupted */
 

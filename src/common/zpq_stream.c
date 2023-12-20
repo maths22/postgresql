@@ -548,6 +548,7 @@ zpq_write(IoStreamLayer * self, ZpqStream * zpq, void const *src, size_t src_siz
 			 */
 			if (rc && errno != EAGAIN && errno != EWOULDBLOCK && errno != EINTR)
 			{
+				printf("DOING A RESET WITH rc: %ld errno: %d\n", rc, errno);
 				zpq->tx_msg_bytes_left = 0;
 				zpq->tx_in.pos = 0;
 				zpq->tx_in.size = 0;
